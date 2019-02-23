@@ -8,6 +8,7 @@ public class Word{
 
   public Word(String word){
     w = word.toLowerCase();
+    lines = new ArrayList<Integer>();
   }
 
   public boolean addLine(int lineno) {
