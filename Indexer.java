@@ -9,10 +9,10 @@ public class Indexer {
   public Indexer(String filename) {
     index = new ArrayList<Word>();
     fn = filename;
-    indexfile();
   }
 
   public Boolean index() {
+    indexfile();
     return true;
   }
 
@@ -20,33 +20,45 @@ public class Indexer {
     String[] words = line.split("\\W+");
     for (int i=0; i<words.length; i++) {
       words[i] = words[i].toLowerCase();
-      index.add(new Word(words[i]));
+      Word word = new Word(words[i]);
+      for (int j=0; j<index.size(); j++) {
+        if (words[i].equals(index.get(j).getWord())) {
+          word.addLine(lineno);
+        } else {
+          index.add(word);
+          word.addLine(lineno);
+        }
+      }
     }
   }
 
   private void indexfile() {
-    int counter = 0;
+    int counter = 1;
     BufferedReader br = null;
       try {
       br = new BufferedReader(new FileReader(fn));
 
       String line;
       while ((line = br.readLine()) != null) {
-        lineSplitter(line, counter++);
-        System.out.println(line + counter);
+        lineSplitter(line, counter);
+        counter++;
       }
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
       try{
         if (br != null)
-      br.close(); }catch (IOException ex) {
+      br.close(); } catch (IOException ex) {
         ex.printStackTrace();
       }
   }}
+
   public void dumpList() {
-    for(int i=0; i<index.size(); i++) {
-    System.out.println(index.get(i).getWord());
+    //for(int i=0; i<index.size(); i++) {
+    //System.out.println(index.get(i).getWord());
+    for (int i=0; i<index.size(); i++) {
+      List<Integer> lines = index.get(i).getLines();
+      System.out.println(lines.toString());
   }
   }
 
